@@ -1,0 +1,135 @@
+$date
+     Nov 02, 2017       18:36:16
+$end
+
+$version
+ SystemC 2.3.1-Accellera --- Sep 21 2017 17:03:58
+$end
+
+$timescale
+     1 ps
+$end
+
+$scope module SystemC $end
+$var wire    3  aaaaa  addrA [2:0]  $end
+$var wire    3  aaaab  addrB [2:0]  $end
+$var wire   32  aaaac  dataA [31:0]  $end
+$var wire   32  aaaad  dataB [31:0]  $end
+$var wire    1  aaaae  writeEnA       $end
+$var wire    1  aaaaf  writeEnB       $end
+$var wire    1  aaaag  memEnable       $end
+$var wire   32  aaaah  dataAOut [31:0]  $end
+$var wire   32  aaaai  dataBOut [31:0]  $end
+$var wire    1  aaaaj  clock       $end
+$upscope $end
+$enddefinitions  $end
+
+$comment
+All initial values are dumped below at time 0 sec = 0 timescale units.
+$end
+
+$dumpvars
+b0 aaaaa
+b0 aaaab
+b0 aaaac
+b0 aaaad
+0aaaae
+0aaaaf
+0aaaag
+b0 aaaah
+b0 aaaai
+0aaaaj
+$end
+
+#2000
+1aaaaj
+
+#12000
+0aaaaj
+
+#22000
+1aaaaj
+
+#32000
+0aaaaj
+
+#42000
+1aaaaj
+
+#52000
+0aaaaj
+
+#62000
+1aaaag
+1aaaaj
+
+#72000
+0aaaaj
+
+#82000
+1aaaaj
+
+#92000
+0aaaaj
+
+#102000
+b100 aaaaa
+b100 aaaab
+1aaaaj
+
+#112000
+0aaaaj
+
+#122000
+1aaaaj
+
+#132000
+0aaaaj
+
+#142000
+b1100 aaaac
+1aaaae
+1aaaaj
+
+#152000
+0aaaaj
+
+#162000
+b1100 aaaah
+b1100 aaaai
+1aaaaj
+
+#172000
+0aaaaj
+
+#182000
+b110 aaaaa
+b1101 aaaad
+1aaaaf
+1aaaaj
+
+#192000
+0aaaaj
+
+#202000
+b1101 aaaai
+1aaaaj
+
+#212000
+0aaaaj
+
+#222000
+1aaaaj
+
+#232000
+0aaaaj
+
+#242000
+1aaaaj
+
+#252000
+0aaaaj
+
+#262000
+1aaaaj
+

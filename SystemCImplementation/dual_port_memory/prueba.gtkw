@@ -1,0 +1,34 @@
+[*]
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Thu Nov  2 17:56:11 2017
+[*]
+[dumpfile] "/home/hzc9107/Documents/University/NTNU/FFT_Project/SystemCImplementation/dual_port_memory/memory.vcd"
+[dumpfile_mtime] "Thu Nov  2 17:36:16 2017"
+[dumpfile_size] 1346
+[savefile] "/home/hzc9107/Documents/University/NTNU/FFT_Project/SystemCImplementation/dual_port_memory/prueba.gtkw"
+[timestart] 39000
+[size] 1360 692
+[pos] -1 -1
+*-15.524480 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 225
+[signals_width] 142
+[sst_expanded] 1
+[sst_vpaned_height] 223
+@23
+SystemC.addrA[2:0]
+@24
+SystemC.dataA[31:0]
+SystemC.dataAOut[31:0]
+@28
+SystemC.writeEnA
+SystemC.clock
+@22
+SystemC.addrB[2:0]
+@24
+SystemC.dataB[31:0]
+SystemC.dataBOut[31:0]
+@28
+SystemC.writeEnB
+SystemC.memEnable
+[pattern_trace] 1
+[pattern_trace] 0
