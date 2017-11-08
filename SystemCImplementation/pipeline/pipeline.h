@@ -2,8 +2,8 @@
 template<unsigned int data_width, unsigned int address_width>
 SC_MODULE(pipeline){
   // Inputs
-  sc_core::sc_clk_in clk;
-  sc_core::sc_in<bool> addStageEnable, multStageEnable;
+  sc_core::sc_in_clk clk;
+  sc_core::sc_in<bool> addStageEnable, multStageEnable, reset, writeEnable;
   sc_core::sc_in<sc_dt::sc_int<data_width> > firstOperandReal,
                                              firstOperandImaginary,
                                              secondOperandReal,
@@ -11,7 +11,7 @@ SC_MODULE(pipeline){
                                              twiddleFactorReal,
                                              twiddleFactorImaginary;
 
-  sc_core::sc_in<sc_dt::sc_bv<address_width> > destAddressIn;
+  sc_core::sc_in<sc_dt::sc_int<address_width> > destAddressIn;
 
   // Outputs
   sc_core::sc_out<sc_dt::sc_int<data_width> > firstOperandOutReal,
@@ -19,7 +19,9 @@ SC_MODULE(pipeline){
                                               secondOperandOutReal,
                                               secondOperandOutImaginary;
 
-  sc_core::sc_out<sc_dt::sc_bv<address_width> > destAddressOut;
+  sc_core::sc_out<sc_dt::sc_int<address_width> > destAddressOut;
+
+  sc_core::sc_out<bool> writeEnableOut;
 
   // Internal Variables
   sc_dt::sc_int<data_width> multStageFirstOperandReal,
@@ -29,8 +31,9 @@ SC_MODULE(pipeline){
                             multStageResultImaginaryReal,
                             multStageResultRealImaginary;
 
-  sc_dt::sc_bv<address_width> multStageDestAddress;
+  sc_dt::sc_int<address_width> multStageDestAddress;
 
+  bool multStageWriteEnable;
   // Process
   void pipeline_exec();
 
@@ -43,44 +46,71 @@ SC_MODULE(pipeline){
 
 template<unsigned int data_width, unsigned int address_width>
 void pipeline<data_width, address_width>::pipeline_exec(){
-  for(int i = 0; i < 2; ++i){
-    if(i == 0 && addStageEnable){
-      sc_dt::sc_int<data_width> tempSubstract, tempAdd;
-      tempSubstract =
-                  multStageResultReal - multStageResultImaginary;
-      tempAdd =
-                  multStageResultImaginaryReal + multStageResultImaginaryReal;
+  if(reset){
+    // Multiplication Stage Signals
+    multStageFirstOperandReal = 0;
+    multStageFirstOperandImaginary = 0;
+    multStageResultReal = 0;
+    multStageResultImaginary = 0;
+    multStageResultImaginaryReal = 0;
+    multStageResultRealImaginary = 0;
+    multStageWriteEnable = false;
+    multStageDestAddress = 0;
 
-      firstOperandOutReal.write(
-                  multStageFirstOperandReal + tempSubstract);
+    //Outputs
+    firstOperandOutReal.write(0);
+    firstOperandOutImaginary.write(0);
+    secondOperandOutReal.write(0);
+    secondOperandOutImaginary.write(0);
+    destAddressOut.write(0);
+    destAddressOut.write(0);
+    writeEnableOut.write(false);
+  } else {
+    for(int i = 0; i < 2; ++i){
+      if(i == 0 && addStageEnable){
+        sc_dt::sc_int<data_width> tempSubstract, tempAdd;
+        tempSubstract =
+                    multStageResultReal - multStageResultImaginary;
+        tempAdd =
+                    multStageResultImaginaryReal + multStageResultRealImaginary;
 
-      firstOperandOutImaginary.write(
-                  multStageResultImaginary + tempAdd);
+        firstOperandOutReal.write(
+                    multStageFirstOperandReal + tempSubstract);
 
-      secondOperandOutReal.write(
-                  multStageFirstOperandImaginary - tempSubstract);
+        firstOperandOutImaginary.write(
+                    multStageFirstOperandImaginary + tempAdd);
 
-      secondOperandOutImaginary.write(
-                  multStageFirstOperandImaginary - tempAdd);
+        secondOperandOutReal.write(
+                    multStageFirstOperandReal - tempSubstract);
 
-      destAddressOut = multStageDestAddress;
-    } else if(multStageEnable){
-      multStageFirstOperandReal = firstOperandReal.read();
+        secondOperandOutImaginary.write(
+                    multStageFirstOperandImaginary - tempAdd);
 
-      multStageFirstOperandImaginary = firstOperandImaginary.read();
 
-      multStageResultReal =
-        (secondOperandReal.read() * twiddleFactorReal.read()).range(2*address_width-1, address_width);
+        destAddressOut.write(multStageDestAddress);
 
-      multStageResultImaginary =
-        (secondOperandImaginary.read() * twiddleFactorImaginary.read()).range(2*address_width-1, address_width);
+        writeEnableOut.write(multStageWriteEnable);
+      } else if(multStageEnable){
+        multStageFirstOperandReal = firstOperandReal.read();
 
-      multStageResultImaginaryReal =
-        (secondOperandImaginary.read() * twiddleFactorReal.read()).range(2*address_width-1, address_width);
+        multStageFirstOperandImaginary = firstOperandImaginary.read();
 
-      multStageResultRealImaginary = (secondOperandReal.read() * twiddleFactorImaginary.read());
+        multStageResultReal =
+          (secondOperandReal.read() * twiddleFactorReal.read()) >> data_width;
 
-      multStageDestAddress = destAddressIn;
+        multStageResultImaginary =
+          (secondOperandImaginary.read() * twiddleFactorImaginary.read()) >> data_width;
+
+        multStageResultImaginaryReal =
+          (secondOperandImaginary.read() * twiddleFactorReal.read()) >> data_width;
+
+        multStageResultRealImaginary = (secondOperandReal.read() * twiddleFactorImaginary.read()) >> data_width;
+
+        multStageDestAddress = destAddressIn;
+
+        multStageWriteEnable = writeEnable.read();
+      }
     }
   }
+
 }
