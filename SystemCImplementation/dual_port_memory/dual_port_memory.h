@@ -1,4 +1,7 @@
 #include"systemc"
+
+#ifndef DUAL_PORT_MEM_H
+#define DUAL_PORT_MEM_H
 template<unsigned int data_width = 32, unsigned int address_width = 2>
 SC_MODULE(dual_port_memory){
   // Input Signal Definitions
@@ -33,7 +36,7 @@ void dual_port_memory<data_width,address_width>::write(){
   if(memEnable.read()){
     if(writeAEn.read() || writeBEn.read()){
       memory[addressA.read()] = (writeAEn.read()) ? dataA.read() : memory[addressA.read()];
-      memory[addressB.read()] = (writeBEn.read()) ? dataB.read() : memory[addressB.read()]; 
+      memory[addressB.read()] = (writeBEn.read()) ? dataB.read() : memory[addressB.read()];
     }
   }
 }
@@ -48,9 +51,11 @@ void dual_port_memory<data_width,address_width>::read(){
       dataAOut.write(valueToWrite);
       dataBOut.write(valueToWrite);
     } else {
-      dataAOut.write((writeAEn.read() ? dataA.read() : memory[addressA.read()])); 
+      dataAOut.write((writeAEn.read() ? dataA.read() : memory[addressA.read()]));
       dataBOut.write((writeBEn.read() ? dataB.read() : memory[addressB.read()]));
-    
+
     }
  }
 }
+
+#endif

@@ -1,4 +1,7 @@
 #include<systemc>
+#ifndef PIPELINE_H
+#define PIPELINE_H
+
 template<unsigned int data_width, unsigned int address_width>
 SC_MODULE(pipeline){
   // Inputs
@@ -114,3 +117,5 @@ void pipeline<data_width, address_width>::pipeline_exec(){
   }
 
 }
+
+#endif
