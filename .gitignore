@@ -1,5 +1,9 @@
 # wave files
 *.vcd
+
+#test files
+*.ssv
+
 # Prerequisites
 *.d
 
