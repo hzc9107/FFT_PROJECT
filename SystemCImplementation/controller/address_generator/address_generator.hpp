@@ -26,6 +26,7 @@ SC_MODULE(address_generator){
 
   // Process
   void generate_address();
+  void generate_finish_signal();
   void exec_count();
 
   SC_CTOR(address_generator){
@@ -33,8 +34,20 @@ SC_MODULE(address_generator){
       sensitive << max_count << stage_count << count;
     SC_METHOD(exec_count);
       sensitive << clk.pos();
+    SC_METHOD(generate_finish_signal);
+      sensitive << count << enable << max_count;
   }
 };
+
+template<unsigned int address_width, unsigned int counter_width, unsigned int stage_width>
+void address_generator<address_width, counter_width, stage_width>::generate_finish_signal(){
+  if(max_count == count && enable){
+    stage_finish.write(true);
+  } else {
+    stage_finish.write(false);
+  }
+}
+
 
 template<unsigned int address_width, unsigned int counter_width, unsigned int stage_width>
 void address_generator<address_width, counter_width, stage_width>::generate_address(){
@@ -339,15 +352,12 @@ template<unsigned int address_width, unsigned int counter_width, unsigned int st
 void address_generator<address_width, counter_width, stage_width>::exec_count(){
   if(reset){
     count.write(0);
-    stage_finish.write(false);
   } else {
     if(enable){
       if(count.read() == max_count.read()){
         count.write(0);
-        stage_finish.write(true);
       } else {
         count.write(count.read()+1);
-        stage_finish.write(false);
       }
     }
   }
