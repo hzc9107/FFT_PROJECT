@@ -22,12 +22,13 @@ SC_MODULE(max_generator){
 
   SC_CTOR(max_generator){
     SC_METHOD(generate_max_values);
+      sensitive << sample_width_selector;
   }
 };
 
 template<unsigned int number_sample_widths, unsigned int counter_width, unsigned int stage_width>
 void max_generator<number_sample_widths, counter_width, stage_width>::generate_max_values(){
-  switch(sample_width_selector){
+  switch(sample_width_selector.read()){
     case SAMPLE_1024:
       max_count.write(511);
       max_stage.write(9);
