@@ -14,7 +14,7 @@ SC_MODULE(stage_counter){
   sc_core::sc_out<sc_dt::sc_uint<stage_width> > stage_cnt;
 
   // Internal Var
-  sc_dt::sc_uint<stage_width> stage_cnt;
+  sc_dt::sc_uint<stage_width> stage_cnt_reg;
   // Process
   void count_stage();
 
@@ -27,11 +27,12 @@ SC_MODULE(stage_counter){
 template<unsigned int stage_width>
 void stage_counter<stage_width>::count_stage(){
   if(reset){
-    stage_cnt = 0;
+    stage_cnt_reg = 0;
   } else {
     if(enable && stage_finish){
-      ++stage_cnt;
+      ++stage_cnt_reg;
     }
   }
+  stage_cnt.write(stage_cnt_reg);
 }
 #endif
