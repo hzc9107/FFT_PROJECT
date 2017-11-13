@@ -1,4 +1,5 @@
 #include<systemc>
+#include<iostream>
 #ifndef EN_GEN_H
 #define EN_GEN_H
 SC_MODULE(enable_generator){
@@ -17,7 +18,7 @@ SC_MODULE(enable_generator){
                         memB_wen;
 
   // Internal variables
-  bool internal_state;
+  bool internal_state, temp_internal_state;
 
   // Processes
   void generate_memx_en();
@@ -39,42 +40,45 @@ SC_MODULE(enable_generator){
 
 void enable_generator::generate_memx_en(){
   if(reset){
-    memA_wen = false;
-    memB_wen = false;
+    memA_wen.write(false);
+    memB_wen.write(false);
   } else if(start && !internal_state){
-    memA_wen = true;
-    memB_wen = false;
+    memA_wen.write(false);
+    memB_wen.write(true);
   } else if(pipe_finish && internal_state){
-    memA_wen = mem_selector;
-    memB_wen = !mem_selector;
+    memA_wen.write(mem_selector);
+    memB_wen.write(!mem_selector);
   }
 }
 
 void enable_generator::generate_pipe_en(){
   if(reset){
-    pipe_en = false;
+    pipe_en.write(false);
   } else if(start && !internal_state){
-    pipe_en = true;
+    pipe_en.write(true);
   }
 }
 
 void enable_generator::generate_addr_gen_en(){
+  std::cout << "In addr_gen_en" << internal_state << start << std::endl;
   if(reset){
-    addr_gen_en = false;
+    addr_gen_en.write(false);
   } else if(start && !internal_state){
-    addr_gen_en = true;
+    addr_gen_en.write(true);
   } else if(stage_finish && internal_state){
-    addr_gen_en = false;
-  } else if(pip_finish && internal_state){
-    addr_gen_en = true;
+    addr_gen_en.write(false);
+  } else if(pipe_finish && internal_state){
+    addr_gen_en.write(true);
   }
 }
 
 void enable_generator::state_machine(){
   if(reset){
     internal_state = false;
+    temp_internal_state = false;
   } else if(start){
-    internal_state = true;
+    internal_state = temp_internal_state;
+    temp_internal_state = true;
   }
 }
 #endif
