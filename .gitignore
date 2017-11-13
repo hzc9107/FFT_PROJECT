@@ -1,6 +1,6 @@
 # wave files
 *.vcd
-
+*.gtkw
 #test files
 *.ssv
 
