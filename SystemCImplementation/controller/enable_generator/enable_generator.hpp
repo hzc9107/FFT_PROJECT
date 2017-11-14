@@ -28,7 +28,7 @@ SC_MODULE(enable_generator){
 
   SC_CTOR(enable_generator){
     SC_METHOD(generate_memx_en);
-      sensitive << clk.pos();
+      sensitive << mem_selector;
     SC_METHOD(generate_pipe_en);
       sensitive << clk.pos();
     SC_METHOD(generate_addr_gen_en);
@@ -39,16 +39,8 @@ SC_MODULE(enable_generator){
 };
 
 void enable_generator::generate_memx_en(){
-  if(reset){
-    memA_wen.write(false);
-    memB_wen.write(false);
-  } else if(start && !internal_state){
-    memA_wen.write(false);
-    memB_wen.write(true);
-  } else if(pipe_finish && internal_state){
-    memA_wen.write(mem_selector);
-    memB_wen.write(!mem_selector);
-  }
+  memA_wen.write(mem_selector);
+  memB_wen.write(!mem_selector);
 }
 
 void enable_generator::generate_pipe_en(){
