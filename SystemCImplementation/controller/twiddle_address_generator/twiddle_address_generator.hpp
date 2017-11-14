@@ -9,7 +9,7 @@ SC_MODULE(twiddle_generator){
   sc_core::sc_in_clk clk;
   sc_core::sc_in<bool> reset, enable;
   sc_core::sc_in<sc_dt::sc_uint<stage_width> > stage_count;
-  sc_core::sc_in<sc_dt::sc_uint<address_width> > sample_number;
+  sc_core::sc_in<sc_dt::sc_uint<address_width + 1> > sample_number;
   // Outputs
   sc_core::sc_out<sc_dt::sc_uint<address_width> > twiddle_address;
 
