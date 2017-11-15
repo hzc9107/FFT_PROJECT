@@ -1,4 +1,8 @@
 #include"../../controller/controller.hpp"
+#define SAMPLE_WIDTH 11
+#define ADDRESS_WIDTH 10
+#define STAGE_WIDTH 4
+#define NUMBER_OF_SUPPORTED_SAMPLE_SIZE 5
 
 SC_MODULE(TEST_CTRL){
   sc_core::sc_in_clk clk;
@@ -25,7 +29,7 @@ SC_MODULE(TEST_CTRL){
   sc_core::sc_signal<bool> temp_pipe_finish;
 
   // DUT
-  controller dut;
+  controller<SAMPLE_WIDTH, ADDRESS_WIDTH, STAGE_WIDTH, NUMBER_OF_SUPPORTED_SAMPLE_SIZE> dut;
 
   void do_test(){
     reset.write(true);
