@@ -4,6 +4,10 @@
 #test files
 *.ssv
 
+#Vivado Files
+*.jou
+*.log
+
 # Prerequisites
 *.d
 
