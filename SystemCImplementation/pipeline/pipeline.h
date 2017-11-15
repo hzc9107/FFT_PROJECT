@@ -72,10 +72,15 @@ void pipeline<data_width, address_width>::pipeline_exec(){
     for(int i = 0; i < 2; ++i){
       if(i == 0 && addStageEnable){
         sc_dt::sc_int<data_width> tempSubstract, tempAdd;
-        tempSubstract =
-                    multStageResultReal - multStageResultImaginary;
-        tempAdd =
-                    multStageResultImaginaryReal + multStageResultRealImaginary;
+        if(multStageResultImaginaryReal != 0 && multStageResultRealImaginary != 0){
+          tempSubstract =
+                      multStageResultReal - multStageResultImaginary;
+          tempAdd =
+                      multStageResultImaginaryReal + multStageResultRealImaginary;
+        } else{
+          tempSubstract = multStageResultReal;
+          tempAdd       = multStageResultImaginary;
+        }
 
         firstOperandOutReal.write(
                     multStageFirstOperandReal + tempSubstract);
@@ -98,20 +103,37 @@ void pipeline<data_width, address_width>::pipeline_exec(){
 
         multStageFirstOperandImaginary = firstOperandImaginary.read();
 
-        multStageResultReal =
-          (secondOperandReal.read() * twiddleFactorReal.read()) >> data_width;
-
-        multStageResultImaginary =
-          (secondOperandImaginary.read() * twiddleFactorImaginary.read()) >> data_width;
-
-        multStageResultImaginaryReal =
-          (secondOperandImaginary.read() * twiddleFactorReal.read()) >> data_width;
-
-        multStageResultRealImaginary = (secondOperandReal.read() * twiddleFactorImaginary.read()) >> data_width;
-
         multStageDestAddress = destAddressIn;
 
         multStageWriteEnable = writeEnable.read();
+
+        if(twiddleFactorReal.read() != 0 && twiddleFactorImaginary.read() != 0){
+          multStageResultReal =
+            (secondOperandReal.read() * twiddleFactorReal.read()) >> data_width;
+
+          multStageResultImaginary =
+            (secondOperandImaginary.read() * twiddleFactorImaginary.read()) >> data_width;
+
+          multStageResultImaginaryReal =
+            (secondOperandImaginary.read() * twiddleFactorReal.read()) >> data_width;
+
+          multStageResultRealImaginary = (secondOperandReal.read() * twiddleFactorImaginary.read()) >> data_width;
+
+        } else if(twiddleFactorReal.read() == 0){
+
+          multStageResultReal      = secondOperandImaginary.read();
+          multStageResultImaginary = secondOperandReal.read();
+          multStageResultRealImaginary = 0;
+          multStageResultImaginaryReal = 1;
+
+        } else{
+
+          multStageResultReal      = secondOperandReal.read();
+          multStageResultImaginary = secondOperandImaginary.read();
+          multStageResultRealImaginary = 1;
+          multStageResultImaginaryReal = 0;
+
+        }
       }
     }
   }
