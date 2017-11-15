@@ -14,7 +14,7 @@ SC_MODULE(pipeline){
                                              twiddleFactorReal,
                                              twiddleFactorImaginary;
 
-  sc_core::sc_in<sc_dt::sc_int<address_width> > destAddressIn;
+  sc_core::sc_in<sc_dt::sc_uint<address_width> > destAddressIn;
 
   // Outputs
   sc_core::sc_out<sc_dt::sc_int<data_width> > firstOperandOutReal,
@@ -22,7 +22,7 @@ SC_MODULE(pipeline){
                                               secondOperandOutReal,
                                               secondOperandOutImaginary;
 
-  sc_core::sc_out<sc_dt::sc_int<address_width> > destAddressOut;
+  sc_core::sc_out<sc_dt::sc_uint<address_width> > destAddressOut;
 
   sc_core::sc_out<bool> writeEnableOut;
 
@@ -34,7 +34,7 @@ SC_MODULE(pipeline){
                             multStageResultImaginaryReal,
                             multStageResultRealImaginary;
 
-  sc_dt::sc_int<address_width> multStageDestAddress;
+  sc_dt::sc_uint<address_width> multStageDestAddress;
 
   bool multStageWriteEnable;
   // Process
