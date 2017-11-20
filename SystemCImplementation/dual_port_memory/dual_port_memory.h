@@ -1,5 +1,6 @@
 #include"systemc"
-
+#include<fstream>
+#include<string>
 #ifndef DUAL_PORT_MEM_H
 #define DUAL_PORT_MEM_H
 template<unsigned int data_width = 32, unsigned int address_width = 2>
@@ -22,6 +23,9 @@ SC_MODULE(dual_port_memory){
   /* Read Process */
   void read();
 
+  /*Write test vector**/
+  void read_vector_from_file(std::string fileName);
+
   SC_CTOR(dual_port_memory){
     SC_METHOD(write);
     sensitive_pos << clk;
@@ -30,6 +34,18 @@ SC_MODULE(dual_port_memory){
     sensitive_pos << clk;
   }
 };
+
+template<unsigned int data_width, unsigned int address_width>
+void dual_port_memory<data_width,address_width>::read_vector_from_file(
+  std::string fileName
+){
+  ifstream test_file(fileName);
+  unsigned int index = 0;
+  std::string line;
+  while(getline(test_file, line)){
+    memory[index++] = std::stoi(line, NULL, 16);
+  }
+}
 
 template<unsigned int data_width, unsigned int address_width>
 void dual_port_memory<data_width,address_width>::write(){
