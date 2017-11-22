@@ -29,7 +29,8 @@ SC_MODULE(controller){
                         pipe_en,
                         memA_wen,
                         memB_wen,
-                        stage_finish;
+                        stage_finish,
+                        fft_done;
 
   // Instances
   address_generator<address_width, address_width-1, stage_width> addr_gen;
@@ -134,6 +135,10 @@ void controller<sample_width, address_width, stage_width, number_of_supported_sa
 
 template<unsigned int sample_width, unsigned int address_width, unsigned int stage_width, unsigned int number_of_supported_sample_size>
 void controller<sample_width, address_width, stage_width, number_of_supported_sample_size>::create_internal_reset(){
+  fft_done.write(
+    (max_stage.read() == stage_count.read()) && pipe_finish.read()
+  );
+
   internal_reset = reset.read() || ((max_stage.read() == stage_count.read()) && pipe_finish.read());
 }
 
