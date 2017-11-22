@@ -1,9 +1,13 @@
 # wave files
 *.vcd
 *.gtkw
+
+#directories
+octave-workspace/
+
 #test files
 *.ssv
-
+*.txt
 #Vivado Files
 *.jou
 *.log
