@@ -37,9 +37,11 @@ SC_MODULE(pipeline){
                             multStageResultRealImaginary;
 
   sc_dt::sc_uint<address_width> multStageDestAddressLow,
-                                multStageDestAddressHigh;
+                                multStageDestAddressHigh,
+                                buffStageDestAddressLow,
+                                buffStageDestAddressHigh;
 
-  bool multStageWriteEnable;
+  bool multStageWriteEnable, buffStageWriteEnable;
   // Process
   void pipeline_exec();
 
@@ -72,17 +74,17 @@ void pipeline<data_width, address_width>::pipeline_exec(){
     destAddressOutHigh.write(0);
     writeEnableOut.write(false);
   } else {
-    for(int i = 0; i < 2; ++i){
+    for(int i = 0; i < 3; ++i){
       if(i == 0 && addStageEnable){
         sc_dt::sc_int<data_width> tempSubstract, tempAdd;
-        if(multStageResultImaginaryReal != 0 && multStageResultRealImaginary != 0){
+        if((multStageResultImaginaryReal == 0 && multStageResultRealImaginary == 1) || (multStageResultRealImaginary == 0 && multStageResultImaginaryReal == 1)){
+          tempSubstract = multStageResultReal;
+          tempAdd       = multStageResultImaginary;
+        } else{
           tempSubstract =
                       multStageResultReal - multStageResultImaginary;
           tempAdd =
                       multStageResultImaginaryReal + multStageResultRealImaginary;
-        } else{
-          tempSubstract = multStageResultReal;
-          tempAdd       = multStageResultImaginary;
         }
 
         firstOperandOutReal.write(
@@ -102,27 +104,27 @@ void pipeline<data_width, address_width>::pipeline_exec(){
         destAddressOutHigh.write(multStageDestAddressHigh);
 
         writeEnableOut.write(multStageWriteEnable);
-      } else if(multStageEnable){
+      } else if(multStageEnable && i == 1){
         multStageFirstOperandReal = firstOperandReal.read();
 
         multStageFirstOperandImaginary = firstOperandImaginary.read();
 
-        multStageDestAddressLow = destAddressInLow;
-        multStageDestAddressHigh = destAddressInHigh;
+        multStageDestAddressLow = buffStageDestAddressLow;
+        multStageDestAddressHigh = buffStageDestAddressHigh;
 
-        multStageWriteEnable = writeEnable.read();
+        multStageWriteEnable = buffStageWriteEnable;
 
         if(twiddleFactorReal.read() != 0 && twiddleFactorImaginary.read() != 0){
           multStageResultReal =
-            (secondOperandReal.read() * twiddleFactorReal.read()) >> data_width;
+            (secondOperandReal.read() * twiddleFactorReal.read()) >> (data_width-1);
 
           multStageResultImaginary =
-            (secondOperandImaginary.read() * twiddleFactorImaginary.read()) >> data_width;
+            (secondOperandImaginary.read() * twiddleFactorImaginary.read()) >> (data_width-1);
 
           multStageResultImaginaryReal =
-            (secondOperandImaginary.read() * twiddleFactorReal.read()) >> data_width;
+            (secondOperandImaginary.read() * twiddleFactorReal.read()) >> (data_width-1);
 
-          multStageResultRealImaginary = (secondOperandReal.read() * twiddleFactorImaginary.read()) >> data_width;
+          multStageResultRealImaginary = (secondOperandReal.read() * twiddleFactorImaginary.read()) >> (data_width-1);
 
         } else if(twiddleFactorReal.read() == 0){
 
@@ -139,6 +141,10 @@ void pipeline<data_width, address_width>::pipeline_exec(){
           multStageResultImaginaryReal = 0;
 
         }
+      } else if(i == 2){
+        buffStageWriteEnable = writeEnable.read();
+        buffStageDestAddressLow = destAddressInLow.read();
+        buffStageDestAddressHigh = destAddressInHigh.read();
       }
     }
   }
