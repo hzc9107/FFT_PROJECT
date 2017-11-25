@@ -27,10 +27,6 @@ SC_MODULE(fft_module){
                                                   twiddleFactorReal,
                                                   twiddleFactorImaginary;
 
-  sc_core::sc_signal<sc_dt::sc_uint<address_width> > twiddleAddress;
-
-  sc_core::sc_signal<sc_dt::sc_int<address_width> > destAddressIn;
-
   sc_core::sc_signal<sc_dt::sc_int<data_width/2> > firstOperandOutReal,
                                                  firstOperandOutImaginary,
                                                  secondOperandOutReal,
@@ -137,7 +133,7 @@ SC_MODULE(fft_module){
     control_unit.memB_wen(writeBEn);
     control_unit.stage_finish(writeEnable);
     control_unit.fft_done(finish);
-    
+
     // Pipeline Instantiation
     pipeline_instance.clk(clk);
     pipeline_instance.addStageEnable(pipe_en);
