@@ -4,8 +4,8 @@ USE ieee.numeric_std.all;
 
 entity twiddle_address_generator is
   generic(
-    address_width : integer := ;
-    stage_width   : integer :=
+    address_width : integer := 11;
+    stage_width   : integer := 4
   );
 
   port(
@@ -13,7 +13,7 @@ entity twiddle_address_generator is
     reset           : in std_logic;
     enable          : in std_logic;
     stage_count     : in unsigned(stage_width-1 downto 0);
-    sample_number   : in unsigned(address_width+1 downto 0);
+    sample_number   : in unsigned(address_width downto 0);
     twiddle_address : out unsigned(address_width-1 downto 0)
   );
 end twiddle_address_generator;
@@ -25,7 +25,7 @@ architecture twid_addr_arch of twiddle_address_generator is
   signal add_value      : unsigned(address_width-1 downto 0);
   signal temp_twid_addr : unsigned(address_width-1 downto 0);
 begin
-  GEN_MAX_COUNT : process(clk)
+  GEN_TWID_ADDR : process(clk)
   begin
     if rising_edge(clk) then
       if reset = '1' then
@@ -38,7 +38,7 @@ begin
             temp_twid_addr <= (others => '0');
           else
             temp_twid_addr <= temp_twid_addr + add_value;
-            count          <= count + '1';
+            count          <= count + to_unsigned(1, count'length);
           end if;
         end if;
       end if;
@@ -77,24 +77,25 @@ begin
     add_value <= (others => '0');
     case to_integer(stage_count) is
       when 1 =>
-        add_value <= shift_right(sample_number, 2);
+        add_value <= shift_right(sample_number, 2)(add_value'length-1 downto 0);
       when 2 =>
-        add_value <= shift_right(sample_number, 3);
+        add_value <= shift_right(sample_number, 3)(add_value'length-1 downto 0);
       when 3 =>
-        add_value <= shift_right(sample_number, 4);
+        add_value <= shift_right(sample_number, 4)(add_value'length-1 downto 0);
       when 4 =>
-        add_value <= shift_right(sample_number, 5);
+        add_value <= shift_right(sample_number, 5)(add_value'length-1 downto 0);
       when 5 =>
-        add_value <= shift_right(sample_number, 6);
+        add_value <= shift_right(sample_number, 6)(add_value'length-1 downto 0);
       when 6 =>
-        add_value <= shift_right(sample_number, 7);
+        add_value <= shift_right(sample_number, 7)(add_value'length-1 downto 0);
       when 7 =>
-        add_value <= shift_right(sample_number, 8);
+        add_value <= shift_right(sample_number, 8)(add_value'length-1 downto 0);
       when 8 =>
-        add_value <= shift_right(sample_number, 9);
+        add_value <= shift_right(sample_number, 9)(add_value'length-1 downto 0);
       when 9 =>
-        add_value <= shift_right(sample_number, 10);
+        add_value <= shift_right(sample_number, 10)(add_value'length-1 downto 0);
       when others =>
+        add_value <= (others => '0');
     end case;
   end process;
 
