@@ -54,7 +54,7 @@ begin
       if reset = '1' then
         internal_state      <= '0';
         temp_internal_state <= '0';
-      elsif start = '1' then
+      elsif start = '1' or temp_internal_state = '1' then
         internal_state      <= temp_internal_state;
         temp_internal_state <= '1';
       end if;
