@@ -10,14 +10,17 @@ package ctrl_pkg is
       stage_width   : integer := 9
     );
     port(
-      clk          : in std_logic;
-      reset        : in std_logic;
-      enable       : in std_logic;
-      max_count    : in unsigned(counter_width-1 downto 0);
-      stage_count  : in unsigned(stage_width -1 downto 0);
-      stage_finish : out std_logic;
-      address_low  : out unsigned(address_width-1 downto 0);
-      address_high : out unsigned(address_width -1 downto 0)
+      clk           : in std_logic;
+      reset         : in std_logic;
+      enable        : in std_logic;
+      radix_type    : in std_logic;
+      max_count     : in unsigned(counter_width-1 downto 0);
+      stage_count   : in unsigned(stage_width -1 downto 0);
+      stage_finish  : out std_logic;
+      address_low1  : out unsigned(address_width-1 downto 0);
+      address_high1 : out unsigned(address_width -1 downto 0);
+      address_low2  : out unsigned(address_width-1 downto 0);
+      address_high2 : out unsigned(address_width -1 downto 0)
     );
   end component address_generator;
 
@@ -28,12 +31,15 @@ package ctrl_pkg is
     );
 
     port(
-      clk             : in std_logic;
-      reset           : in std_logic;
-      enable          : in std_logic;
-      stage_count     : in unsigned(stage_width-1 downto 0);
-      sample_number   : in unsigned(address_width downto 0);
-      twiddle_address : out unsigned(address_width-1 downto 0)
+      clk              : in std_logic;
+      reset            : in std_logic;
+      enable           : in std_logic;
+      radix_type       : in std_logic;
+      stage_count      : in unsigned(stage_width-1 downto 0);
+      sample_number    : in unsigned(address_width downto 0);
+      twiddle_address1 : out unsigned(address_width-1 downto 0);
+      twiddle_address2 : out unsigned(address_width-1 downto 0);
+      twiddle_address3 : out unsigned(address_width-1 downto 0)
     );
   end component twiddle_address_generator;
 
@@ -60,6 +66,7 @@ package ctrl_pkg is
     );
     port(
       sample_width_selector : in unsigned(number_sample_widths-1 downto 0);
+      radix_type            : in std_logic;
       max_count             : out unsigned(counter_width-1 downto 0);
       max_stage             : out unsigned(stage_width-1 downto 0)
     );
@@ -78,4 +85,15 @@ package ctrl_pkg is
       stage_cnt     : out unsigned(stage_width-1 downto 0)
     );
   end component stage_counter;
+
+  component mem_block_generator
+    generic(
+      stage_width : integer := 4;
+      block_width : integer := 3
+    );
+    port(
+      stage_count : in unsigned(stage_width-1 downto 0);
+      positionToBlock : out unsigned(block_width-1 downto 0)
+    );
+  end component;
 end package ctrl_pkg;

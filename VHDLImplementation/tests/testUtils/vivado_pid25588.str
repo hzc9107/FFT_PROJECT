@@ -1,0 +1,83 @@
+/*
+
+Xilinx Vivado v2017.3 (64-bit) [Major: 2017, Minor: 3]
+SW Build: 2018833 on Wed Oct  4 19:58:07 MDT 2017
+IP Build: 2016188 on Wed Oct  4 21:52:56 MDT 2017
+
+Process ID: 25588
+License: Customer
+
+Current time: 	Wed Nov 29 03:09:12 CET 2017
+Time zone: 	Central European Time (Europe/Oslo)
+
+OS: NAME="Ubuntu"
+OS Version: 4.10.0-40-generic
+OS Architecture: amd64
+Available processors (cores): 4
+
+Display: :0.0
+Screen size: 1360x768
+Screen resolution (DPI): 95
+Available screens: 1
+Available disk space: 31 GB
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+
+Java version: 	1.8.0_112 64-bit
+Java home: 	/opt/Xilinx/Vivado/2017.3/tps/lnx64/jre
+JVM executable location: 	/opt/Xilinx/Vivado/2017.3/tps/lnx64/jre/bin/java
+
+User name: 	hzc9107
+User home directory: /home/hzc9107
+User working directory: /home/hzc9107/Documents/University/NTNU/FFT_Project/VHDLImplementation/tests/testUtils
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+RDI_BASEROOT: /opt/Xilinx/Vivado
+HDI_APPROOT: /opt/Xilinx/Vivado/2017.3
+RDI_DATADIR: /opt/Xilinx/Vivado/2017.3/data
+RDI_BINDIR: /opt/Xilinx/Vivado/2017.3/bin
+
+User preferences location: /home/hzc9107/.Xilinx/Vivado
+Vivado preferences directory: /home/hzc9107/.Xilinx/Vivado/2017.3/vivado.xml
+Vivado layouts directory: /home/hzc9107/.Xilinx/Vivado/2017.3/layouts
+PlanAhead jar file location: 	/opt/Xilinx/Vivado/2017.3/lib/classes/planAhead.jar
+Vivado log file location: 	/home/hzc9107/Documents/University/NTNU/FFT_Project/VHDLImplementation/tests/testUtils/vivado.log
+Vivado journal file location: 	/home/hzc9107/Documents/University/NTNU/FFT_Project/VHDLImplementation/tests/testUtils/vivado.jou
+Engine tmp dir: 	./.Xil/Vivado-25588-macondo
+
+GUI allocated memory:	160 MB
+GUI max memory:		3,052 MB
+Engine allocated memory: 867 MB
+
+Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+*/
+
+// TclEventType: START_GUI
+// Tcl Message: start_gui 
+// [GUI Memory]: 54 MB (+53946kb) [00:00:07]
+// [Engine Memory]: 814 MB (+702003kb) [00:00:07]
+selectList(PAResourceQtoS.SyntheticaGettingStartedView_RECENT_PROJECTS, "/home/hzc9107/Documents/University/NTNU/FFT_Project/Debug/Debug.xpr", 0); // q (O, cl)
+// bs (cl):  Open Project : addNotify
+// Opening Vivado Project: /home/hzc9107/Documents/University/NTNU/FFT_Project/Debug/Debug.xpr. Version: Vivado v2017.3 
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: MSGMGR_MOVEMSG
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_CURRENT
+// TclEventType: PROJECT_NEW
+// Tcl Message: open_project /home/hzc9107/Documents/University/NTNU/FFT_Project/Debug/Debug.xpr 
+// Tcl Message: Scanning sources... Finished scanning sources 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified 
+// TclEventType: PROJECT_NEW
+// [Engine Memory]: 886 MB (+32379kb) [00:00:11]
+// Tcl Message: INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/Xilinx/Vivado/2017.3/data/ip'. 
+// HMemoryUtils.trashcanNow. Engine heap size: 930 MB. GUI used memory: 33 MB. Current time: 11/29/17 3:09:18 AM CET
+// Tcl Message: open_project: Time (s): cpu = 00:00:14 ; elapsed = 00:00:06 . Memory (MB): peak = 6075.828 ; gain = 95.043 ; free physical = 108 ; free virtual = 1096 
+// Project name: Debug; location: /home/hzc9107/Documents/University/NTNU/FFT_Project/Debug; part: xc7z020clg400-3
+// [Engine Memory]: 931 MB (+1710kb) [00:00:15]
+dismissDialog("Open Project"); // bs (cl)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+// TclEventType: DG_GRAPH_GENERATED
+// Tcl Message: update_compile_order -fileset sources_1 

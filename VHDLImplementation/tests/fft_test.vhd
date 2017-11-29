@@ -15,6 +15,7 @@ architecture test_fft of test_bench is
   signal twiddle_data_port    : signed(31 downto 0);
   signal twiddle_address_port : unsigned(9 downto 0);
   signal fft_finish           : std_logic;
+  signal radix_type           : std_logic;
   constant half_period        : time := 1 ns;
 
   component fft_top is
@@ -23,17 +24,19 @@ architecture test_fft of test_bench is
       address_width                   : integer := 10;
       sample_width                    : integer := 11;
       stage_width                     : integer := 4;
-      number_of_supported_sample_size : integer := 5
+      number_of_supported_sample_size : integer := 5;
+      block_width                     : integer := 3
     );
     port(
-      reset                : in std_logic;
-      clk                  : in std_logic;
-      start                : in std_logic;
-      sample_size          : in unsigned(sample_width-1 downto 0);
-      twiddle_write_port   : in std_logic;
-      twiddle_data_port    : in signed(data_width-1 downto 0);
-      twiddle_address_port : in unsigned(address_width-1 downto 0);
-      fft_finish           : out std_logic
+      reset                 : in std_logic;
+      clk                   : in std_logic;
+      start                 : in std_logic;
+      radix_type            : in std_logic;
+      sample_size           : in unsigned(sample_width-1 downto 0);
+      twiddle_write_port    : in std_logic;
+      twiddle_data_port     : in signed(data_width-1 downto 0);
+      twiddle_address_port  : in unsigned(address_width-1 downto 0);
+      fft_finish            : out std_logic
 
     );
   end component;
@@ -45,6 +48,7 @@ begin
     clk                   => clk,
     start                 => start,
     sample_size           => sample_size,
+    radix_type            => radix_type,
     twiddle_write_port    => twiddle_write_port,
     twiddle_data_port     => twiddle_data_port,
     twiddle_address_port  => twiddle_address_port,
@@ -56,6 +60,7 @@ begin
     wait for 2*half_period;
       reset <= '1';
       start <= '1';
+      radix_type <= '0';
       sample_size <= to_unsigned(64, sample_size'length);
       twiddle_write_port <= '0';
       twiddle_data_port  <= (others => '0');

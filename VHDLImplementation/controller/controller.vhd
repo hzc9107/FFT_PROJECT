@@ -7,24 +7,29 @@ entity controller is
     sample_width                    : integer := 11;
     address_width                   : integer := 10;
     stage_width                     : integer := 4;
-    number_of_supported_sample_size : integer := 5
+    number_of_supported_sample_size : integer := 5;
+    block_width                     : integer := 3
   );
 
   port(
-    clk               : in std_logic;
-    reset             : in std_logic;
-    start             : in std_logic;
-    pipe_finish       : in std_logic;
-    number_of_samples : in unsigned(sample_width-1 downto 0);
-    address_low       : out unsigned(address_width-1 downto 0);
-    address_high      : out unsigned(address_width-1 downto 0);
-    twiddle_address   : out unsigned(address_width-1 downto 0);
-    mem_en            : out std_logic;
-    pipe_en           : out std_logic;
-    memA_wen          : out std_logic;
-    memB_wen          : out std_logic;
-    stage_finish      : out std_logic;
-    fft_done          : out std_logic
+    clk                   : in std_logic;
+    reset                 : in std_logic;
+    radix_type            : in std_logic;
+    start                 : in std_logic;
+    pipe_finish           : in std_logic;
+    number_of_samples     : in unsigned(sample_width-1 downto 0);
+    address_low1          : out unsigned(address_width-1 downto 0);
+    address_low2          : out unsigned(address_width-1 downto 0);
+    address_high1         : out unsigned(address_width-1 downto 0);    address_high2         : out unsigned(address_width-1 downto 0);
+    twiddle_address1      : out unsigned(address_width-1 downto 0);
+    twiddle_address2      : out unsigned(address_width-1 downto 0);
+    twiddle_address3      : out unsigned(address_width-1 downto 0);
+    mem_en                : out std_logic;
+    pipe_en               : out std_logic;
+    memA_wen              : out std_logic;
+    memB_wen              : out std_logic;
+    stage_finish          : out std_logic;
+    positionToBlock   : out unsigned(block_width-1 downto 0);    fft_done              : out std_logic
   );
 end controller;
 
@@ -51,11 +56,14 @@ begin
       clk           => clk,
       reset         => internal_reset,
       enable        => addr_gen_en,
+      radix_type    => radix_type,
       max_count     => max_count,
       stage_count   => stage_count,
       stage_finish  => stage_finish_internal,
-      address_low   => address_low,
-      address_high  => address_high
+      address_low1  => address_low1,
+      address_low2  => address_low2,
+      address_high1 => address_high1,
+      address_high2 => address_high2
     );
 
   twid_addr_gen_inst : twiddle_address_generator
@@ -65,12 +73,15 @@ begin
     )
 
     port map(
-      clk             => clk,
-      reset           => internal_reset,
-      enable          => addr_gen_en,
-      stage_count     => stage_count,
-      sample_number   => number_of_samples,
-      twiddle_address => twiddle_address
+      clk               => clk,
+      reset             => internal_reset,
+      enable            => addr_gen_en,
+      radix_type        => radix_type,
+      stage_count       => stage_count,
+      sample_number     => number_of_samples,
+      twiddle_address1  => twiddle_address1,
+      twiddle_address2  => twiddle_address2,
+      twiddle_address3  => twiddle_address3
     );
 
   max_val_gen_inst : max_val_gen
@@ -82,6 +93,7 @@ begin
 
     port map(
       sample_width_selector => sample_width_selector,
+      radix_type            => radix_type,
       max_count             => max_count,
       max_stage             => max_stage
     );
@@ -111,6 +123,16 @@ begin
       enable        => pipe_en_internal,
       stage_finish  => pipe_finish,
       stage_cnt     => stage_count
+    );
+
+  mem_block_gen_inst : mem_block_generator
+    generic map(
+      stage_width => stage_width,
+      block_width => block_width
+    )
+    port map(
+      stage_count => stage_count,
+      positionToBlock => positionToBlock
     );
 
   INTERNAL_RESET_GEN : process(reset, max_stage, pipe_finish, stage_count)

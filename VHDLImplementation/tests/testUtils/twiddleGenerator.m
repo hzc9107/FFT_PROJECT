@@ -55,14 +55,15 @@ invert = bitshift(1,16)-1;
 fid = fopen("twidMemContents.txt", "w");
 fprintf(fid,"process\nbegin\n");
 fflush(fid);
-for mm = 1:1:(fft_length/2)
-  if(im_twiddle_bin(mm) == 0)
-    im_print = 0;
+for mm = 1:1:(fft_length)
+  if(mm >= fft_length/2)
+    im_print = im_twiddle_bin(mm);
   else 
     im_print = bitxor(im_twiddle_bin(mm), invert) + 1;
   endif
+
   real_print = real_twiddle_bin(mm);
-  if(mm <= fft_length/4)
+  if(mm <= fft_length/4 || mm >= 3*fft_length/4)
     printvalue = bitshift(real_print,16) + im_print;
     fprintf(fid, "\tmemory(%d) <= to_signed(%d, data_width);\n", mm-1, printvalue);
     fflush(fid);

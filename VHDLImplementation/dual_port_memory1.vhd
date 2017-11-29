@@ -4,7 +4,7 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use std.textio.all;
 
-entity dual_port_memory is
+entity dual_port_memory1 is
   generic(
     data_width    : integer := 32;
     address_width : integer := 10
@@ -22,9 +22,9 @@ entity dual_port_memory is
     dataAOut : out signed(data_width-1 downto 0);
     dataBOut : out signed(data_width-1 downto 0)
   );
-end dual_port_memory;
+end dual_port_memory1;
 
-architecture dual_port_memory_arch of dual_port_memory is
+architecture dual_port_memory_arch of dual_port_memory1 is
   type ram_type is array (0 to (2**address_width)-1) of signed(data_width-1 downto 0);
   signal memory : ram_type;
 
@@ -97,7 +97,7 @@ begin
       	memory(5) <= (others=>'0');
       	memory(6) <= (others=>'0');
       	memory(7) <= (others=>'0');
-      	memory(8) <= to_signed(16777216, data_width);
+      	memory(8) <= (others=>'0');
       	memory(9) <= (others=>'0');
       	memory(10) <= (others=>'0');
       	memory(11) <= (others=>'0');
@@ -168,7 +168,7 @@ begin
 
   process (clk) is
   variable line_v   : line;
-  file     out_file : text open write_mode is "memA.txt";
+  file     out_file : text open write_mode is "memB.txt";
   variable done : std_logic;
 begin
   if rising_edge(clk) then
